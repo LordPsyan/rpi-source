@@ -99,6 +99,7 @@ Line 21-25:
 Replace uint64_t with uint32_t in src/anbox/input/device.cpp, struct CompatEvent.
 
 Around line 56
+
     change:    std::uint64_t sec;
     to:        std::uint32_t sec;
     change:    std::uint64_t usec;
