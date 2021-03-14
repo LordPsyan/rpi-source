@@ -62,16 +62,14 @@ Chapter 2: binder_linux && ashmem kernel modules
 
 Chapter 3: Anbox from source
 
-    Clone anbox
-    
-    $ git clone https://github.com/anbox/anbox.git
+Now we clone.
+
+    $ git clone https://github.com/anbox/anbox.git --recurse-submodules
     $ cd anbox
-    $ git submodule init
-    $ git submodule update
 
 Delete the following lines from CMakeLists.txt.
 
-# Line 21-25:
+Line 21-25:
 
 `
 set(C_AND_CXX_WARNINGS "-pedantic -Wno-error=pedantic -Wall -Wextra")
@@ -81,7 +79,7 @@ set(EXTRA_C_WARNINGS "-Wcast-align -Wcast-qual -Wformat -Wredundant-decls -Wswit
 set(EXTRA_CXX_WARNINGS "-Wnon-virtual-dtor -Wold-style-cast")
 `
 
-# 15 lines down, give or take...
+15 lines down, give or take...
 
 `
 if ("${cmake_build_type_lower}" STREQUAL "release" OR "${cmake_build_type_lower}" STREQUAL "relwithdebinfo")
@@ -101,7 +99,7 @@ if (${Werror})
 endif()
 `
 
-# Replace uint64_t with uint32_t in src/anbox/input/device.cpp, struct CompatEvent.
+Replace uint64_t with uint32_t in src/anbox/input/device.cpp, struct CompatEvent.
 
 @@ -55,8 +55,8 @@ void Device::send_events(const std::vector<Event> &events) {
      // NOTE: A bit dirty but as we're running currently a 64 bit container
@@ -115,14 +113,13 @@ endif()
      std::uint16_t code;
      std::uint32_t value;
 
-# This is needed to support 32bit android userland
+This is needed to support 32bit android userland
 
-# Now to compile anbox.
+Now to compile anbox.
 
    First, we need dependencies... again...
 
-
-# You will encounter an error during apt install stating it cannot find a file if you don't do this first. These files were changed, but here is a link to those files and instructions on what to do with them. I also included these files in the "Extras" folder in this repository.
+You will encounter an error during apt install stating it cannot find a file if you don't do this first. These files were changed, but here is a link to those files and instructions on what to do with them. I also included these files in the "Extras" folder in this repository.
 
     $ wget http://ramses.wh2.tu-dresden.de/pub/mirrors/raspbian/raspbian/pool/main/s/systemd/libsystemd-dev_241-7~deb10u5+rpi1_armhf.deb
     $ wget http://ramses.wh2.tu-dresden.de/pub/mirrors/raspbian/raspbian/pool/main/s/systemd/libudev-dev_241-7~deb10u5+rpi1_armhf.deb
@@ -131,10 +128,8 @@ endif()
 
     $ sudo apt install build-essential cmake cmake-data debhelper dbus google-mock libboost-dev libboost-filesystem-dev libboost-log-dev libboost-iostreams-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev libcap-dev libexpat1-dev libsystemd-dev libegl1-mesa-dev libgles2-mesa-dev libglm-dev libgtest-dev liblxc1 libproperties-cpp-dev libprotobuf-dev libsdl2-dev libsdl2-image-dev lxc-dev pkg-config protobuf-compiler python3-minimal
     
-# Now we clone. The --recurse-submodules is just in case you forgot git submodule commands.
+Compile from source:
 
-    $ git clone https://github.com/anbox/anbox.git --recurse-submodules
-    $ cd anbox
     $ mkdir build
     $ cd build
     $ cmake ..
@@ -144,12 +139,13 @@ endif()
 Chapter 4: Anbox/android.img for armv7
 
 This downloads ~ 40GB of sources and uses ~ 100GB of disk space. You need a powerful desktop for this step. It will take hours.
+I did this on a windows machine with virtualbox running debian 10. Good luck on this part. I might add a new file with instructions specifically for this, as it was a royal pain in the {censored}.
 
     Open a terminal and type
 
     $ export LC_ALL=C
 
-    Follow instructions in anbox/build-android
+    Follow instructions in https://github.com/anbox/anbox/blob/master/docs/build-android.md
     Extract android.img with
 
     unsquashfs android.img
