@@ -19,13 +19,14 @@ Chapter 1: PI Kernel from source
 
 This is needed to get to get the matching kernel headers / Modules.symvers, so we can build binder/ashmem
 
-    Get Dependencies
+Get Dependencies
 
     $ sudo apt-get install git bc bison flex libssl-dev dkms raspberrypi-kernel-headers libncurses5-dev
 
     Get the matching kernel using rpi-source
 
     $ sudo wget https://raw.githubusercontent.com/RPi-Distro/rpi-source/master/rpi-source -O /usr/local/bin/rpi-source && sudo chmod +x /usr/local/bin/rpi-source && /usr/local/bin/rpi-source -q --tag-update
+    
     $ rpi-source
 
     Extract the current kernel config with
@@ -71,33 +72,29 @@ Delete the following lines from CMakeLists.txt.
 
 Line 21-25:
 
-`
-set(C_AND_CXX_WARNINGS "-pedantic -Wno-error=pedantic -Wall -Wextra")
+    set(C_AND_CXX_WARNINGS "-pedantic -Wno-error=pedantic -Wall -Wextra")
 
-# Some additional warnings not included by the general flags set above.
-set(EXTRA_C_WARNINGS "-Wcast-align -Wcast-qual -Wformat -Wredundant-decls -Wswitch-default")
-set(EXTRA_CXX_WARNINGS "-Wnon-virtual-dtor -Wold-style-cast")
-`
+    # Some additional warnings not included by the general flags set above.
+    set(EXTRA_C_WARNINGS "-Wcast-align -Wcast-qual -Wformat -Wredundant-decls -Wswitch-default")
+    set(EXTRA_CXX_WARNINGS "-Wnon-virtual-dtor -Wold-style-cast")
 
 15 lines down, give or take...
 
-`
-if ("${cmake_build_type_lower}" STREQUAL "release" OR "${cmake_build_type_lower}" STREQUAL "relwithdebinfo")
-  option(Werror "Treat warnings as errors" ON)
-else()
-  option(Werror "Treat warnings as errors" OFF)
-endif()
+    if ("${cmake_build_type_lower}" STREQUAL "release" OR "${cmake_build_type_lower}" STREQUAL "relwithdebinfo")
+      option(Werror "Treat warnings as errors" ON)
+    else()
+      option(Werror "Treat warnings as errors" OFF)
+    endif()
 
-if (${Werror})
-    message(STATUS "Treat warnings as errors")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-  if ("${cmake_build_type_lower}" STREQUAL "release" OR "${cmake_build_type_lower}" STREQUAL "relwithdebinfo")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error=deprecated-declarations")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations")
-  endif()
-endif()
-`
+    if (${Werror})
+        message(STATUS "Treat warnings as errors")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+      if ("${cmake_build_type_lower}" STREQUAL "release" OR "${cmake_build_type_lower}" STREQUAL "relwithdebinfo")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error=deprecated-declarations")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations")
+      endif()
+    endif()
 
 Replace uint64_t with uint32_t in src/anbox/input/device.cpp, struct CompatEvent.
 
