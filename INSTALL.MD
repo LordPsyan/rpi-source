@@ -65,19 +65,25 @@ Chapter 3: Anbox from source
     Clone anbox
     
     $ git clone https://github.com/anbox/anbox.git
-    
-    Delete the following lines from CMakeLists.txt.
+    $ cd anbox
+    $ git submodule init
+    $ git submodule update
 
-# Reduce warnings (At the top of CMakeLists.txt)
+Delete the following lines from CMakeLists.txt.
 
-set(C_AND_CXX_WARNINGS "-pedantic -Wall -Wextra")
+# Line 21-25:
+
+`
+set(C_AND_CXX_WARNINGS "-pedantic -Wno-error=pedantic -Wall -Wextra")
 
 # Some additional warnings not included by the general flags set above.
 set(EXTRA_C_WARNINGS "-Wcast-align -Wcast-qual -Wformat -Wredundant-decls -Wswitch-default")
 set(EXTRA_CXX_WARNINGS "-Wnon-virtual-dtor -Wold-style-cast")
+`
 
-# No -Werror (a bit further down)
+# 15 lines down, give or take...
 
+`
 if ("${cmake_build_type_lower}" STREQUAL "release" OR "${cmake_build_type_lower}" STREQUAL "relwithdebinfo")
   option(Werror "Treat warnings as errors" ON)
 else()
@@ -93,10 +99,9 @@ if (${Werror})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations")
   endif()
 endif()
+`
 
-# This is needed because the compiler on the PI is newer/more strict than the typical desktop one
-
-    Replace uint64_t with uint32_t in src/anbox/input/device.cpp, struct CompatEvent.
+# Replace uint64_t with uint32_t in src/anbox/input/device.cpp, struct CompatEvent.
 
 @@ -55,8 +55,8 @@ void Device::send_events(const std::vector<Event> &events) {
      // NOTE: A bit dirty but as we're running currently a 64 bit container
@@ -112,7 +117,29 @@ endif()
 
 # This is needed to support 32bit android userland
 
-    Follow the anbox build instructions to build and sudo make install
+# Now to compile anbox.
+
+   First, we need dependencies... again...
+
+
+# You will encounter an error during apt install stating it cannot find a file if you don't do this first. These files were changed, but here is a link to those files and instructions on what to do with them. I also included these files in the "Extras" folder in this repository.
+
+    $ wget http://ramses.wh2.tu-dresden.de/pub/mirrors/raspbian/raspbian/pool/main/s/systemd/libsystemd-dev_241-7~deb10u5+rpi1_armhf.deb
+    $ wget http://ramses.wh2.tu-dresden.de/pub/mirrors/raspbian/raspbian/pool/main/s/systemd/libudev-dev_241-7~deb10u5+rpi1_armhf.deb
+    $ dpkg -i libsystemd-dev_241-7~deb10u5+rpi1_armhf.deb
+    $ dpkg -i libudev-dev_241-7~deb10u5+rpi1_armhf.deb
+
+    $ sudo apt install build-essential cmake cmake-data debhelper dbus google-mock libboost-dev libboost-filesystem-dev libboost-log-dev libboost-iostreams-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev libcap-dev libexpat1-dev libsystemd-dev libegl1-mesa-dev libgles2-mesa-dev libglm-dev libgtest-dev liblxc1 libproperties-cpp-dev libprotobuf-dev libsdl2-dev libsdl2-image-dev lxc-dev pkg-config protobuf-compiler python3-minimal
+    
+# Now we clone. The --recurse-submodules is just in case you forgot git submodule commands.
+
+    $ git clone https://github.com/anbox/anbox.git --recurse-submodules
+    $ cd anbox
+    $ mkdir build
+    $ cd build
+    $ cmake ..
+    $ make -j4
+    $ sudo make install
 
 Chapter 4: Anbox/android.img for armv7
 
