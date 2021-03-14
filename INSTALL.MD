@@ -98,17 +98,11 @@ Line 21-25:
 
 Replace uint64_t with uint32_t in src/anbox/input/device.cpp, struct CompatEvent.
 
-@@ -55,8 +55,8 @@ void Device::send_events(const std::vector<Event> &events) {
-     // NOTE: A bit dirty but as we're running currently a 64 bit container
-     // struct input_event has a different size. We rebuild the struct here
-     // to reach the correct size.
--    std::uint64_t sec;
--    std::uint64_t usec;
-+    std::uint32_t sec;
-+    std::uint32_t usec;
-     std::uint16_t type;
-     std::uint16_t code;
-     std::uint32_t value;
+Around line 56
+    change:    std::uint64_t sec;
+    to:        std::uint32_t sec;
+    change:    std::uint64_t usec;
+    to:        std::uint32_t usec;
 
 This is needed to support 32bit android userland
 
