@@ -21,7 +21,7 @@ This is needed to get to get the matching kernel headers / Modules.symvers, so w
 
     Get the matching kernel using rpi-source
 
-    $ sudo wget https://raw.githubusercontent.com/notro/rpi-source/master/rpi-source -O /usr/bin/rpi-source && sudo chmod +x /usr/bin/rpi-source && /usr/bin/rpi-source -q --tag-update
+    $ sudo wget https://raw.githubusercontent.com/RPi-Distro/rpi-source/master/rpi-source -O /usr/local/bin/rpi-source && sudo chmod +x /usr/local/bin/rpi-source && /usr/local/bin/rpi-source -q --tag-update
     $ rpi-source
 
     Extract the current kernel config with
@@ -47,6 +47,9 @@ This is needed to get to get the matching kernel headers / Modules.symvers, so w
 Chapter 2: binder_linux && ashmem kernel modules
 
     Clone anbox-modules
+    
+    $ git clone https://github.com/anbox/anbox-modules.git
+    
     Add the following line on top of binder/binder.c
 
     #define CONFIG_ANDROID_BINDER_IPC_32BIT
@@ -56,6 +59,9 @@ Chapter 2: binder_linux && ashmem kernel modules
 Chapter 3: Anbox from source
 
     Clone anbox
+    
+    $ git clone https://github.com/anbox/anbox.git
+    
     Delete the following lines from CMakeLists.txt.
 
 # Reduce warnings (At the top of CMakeLists.txt)
