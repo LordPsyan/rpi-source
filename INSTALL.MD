@@ -19,6 +19,10 @@ Chapter 1: PI Kernel from source
 
 This is needed to get to get the matching kernel headers / Modules.symvers, so we can build binder/ashmem
 
+    Get Dependencies
+
+    $ sudo apt-get install git bc bison flex libssl-dev dkms raspberrypi-kernel-headers libncurses5-dev
+
     Get the matching kernel using rpi-source
 
     $ sudo wget https://raw.githubusercontent.com/RPi-Distro/rpi-source/master/rpi-source -O /usr/local/bin/rpi-source && sudo chmod +x /usr/local/bin/rpi-source && /usr/local/bin/rpi-source -q --tag-update
